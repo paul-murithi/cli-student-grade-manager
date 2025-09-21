@@ -10,3 +10,4 @@ Update: Modify student information
 
 Delete: Remove student records
 
+Test push: SSH connection working
