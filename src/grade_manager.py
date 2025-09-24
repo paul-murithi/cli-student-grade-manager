@@ -41,9 +41,9 @@ def view_all_students():
         for reg_no, student_details in students.items():
             name = student_details.get('name', 'N/A')
             grade = student_details.get('grade', 'N/A')
-            print(f"{reg_no:<20}\t{name:<10}\t{grade:<10}")
+            print(f"{reg_no.upper():<20}\t{name:<10}\t{grade:<10}")
         for reg_no, student_details in students.items():
-            print(f"{reg_no:<20}\t{student_details['name']:<10}\t{student_details['grade']:<10}")
+            print(f"{reg_no.upper():<20}\t{student_details['name']:<10}\t{student_details['grade']:<10}")
     else:
         print("No students found.")
 
@@ -61,7 +61,7 @@ def add_student():
         # Get the new student details
         student_name = input("Enter student name: ")
         student_grade = int(input("Enter student's grade: "))
-        student_registration_no = input("Enter student's Reg.No: ")
+        student_registration_no = input("Enter student's Reg.No: ").upper()
 
         # Add new student to the dictionary
         students[student_registration_no] = {
@@ -70,7 +70,7 @@ def add_student():
         }
         # updated dictionary
         with open(data_file, 'w') as file:
-            json.dump(students, file, indent=4)
+            json.dump(students, file, indent=4, sort_keys=True)
 
         print(f"Student {student_name} added successfully.")
         return True
@@ -79,6 +79,47 @@ def add_student():
         print("An error occured. Please try again")
         return False
 
+def update_student():
+    reg_no = input("Enter student registration number: ").upper()
+    try:
+        with open(data_file, "r") as file:
+            students = json.load(file)
+        if reg_no not in students:
+            print("Error! Registration number not found!")
+            return
+        else:
+            print("Update details")
+            name = input("Update new name: ")
+            grade = int(input("Update new grade: "))
+
+            students[reg_no] = {
+                "name": name,
+                "grade": grade
+            }
+            with open(data_file, "w") as file:
+                json.dump(students, file, indent=4, sort_keys=True)
+            print("Success")
+            return
+    except Exception as e:
+        print(f"An error occured: {e}")
+        return False
+
+def delete_student():
+    reg_no = input("Enter the reg no of the student you want to delete: ").upper()
+    try:
+        with open(data_file, "r") as file:
+            students = json.load(file)
+        if reg_no not in students:
+            print("Error! Registration number not found!")
+            return
+        del students[reg_no]
+        with open(data_file, "w") as file:
+            json.dump(students, file, indent=4, sort_keys=True)
+        print("Success")
+        return
+    except Exception as e:
+        print(f"An error occured: {e}")
+        return False
 
 show_main_menu()
 
@@ -95,11 +136,9 @@ while True:
     elif user_option == "2":
         view_all_students()
     elif user_option == "3":
-        # TODO: Implement update student grade functionality
-        ...
+        update_student()
     elif user_option == "4":
-        # TODO: Implement delete student functionality
-        ...
+        delete_student()
     elif user_option == "5":
         print("Exiting program. Goodbye!")
         break
