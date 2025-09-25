@@ -21,6 +21,20 @@ def show_main_menu():
 def get_user_input():
     return input("Pick an option (1-5): ")
 
+def is_duplicate(reg_no, students):
+    return reg_no in students
+
+def open_file():
+    try:
+        with open(data_file, 'r') as file:
+            students = json.load(file)
+            if not isinstance(students, dict):
+                students = {}
+    except Exception:
+        print("Could not load file")
+        students = {}
+    return students
+
 def validate_user_input(input):
     if input in ("1", "2", "3", "4", "5"):
         return True
@@ -49,31 +63,28 @@ def view_all_students():
 
 def add_student():
     try:
-        # Get the JSON file
-        if file_exists:
-            try: 
-                with open(data_file, 'r') as file:
-                    students = json.load(file)
-            except json.JSONDecodeError as e:
-                students = {}
-        else:
-            students = {}
+        students = open_file()
         # Get the new student details
         student_name = input("Enter student name: ")
         student_grade = int(input("Enter student's grade: "))
         student_registration_no = input("Enter student's Reg.No: ").upper()
 
-        # Add new student to the dictionary
-        students[student_registration_no] = {
-            "name": student_name,
-            "grade": student_grade
-        }
-        # updated dictionary
-        with open(data_file, 'w') as file:
-            json.dump(students, file, indent=4, sort_keys=True)
+        # Prevent duplicate ID using cached students
+        if is_duplicate(student_registration_no, students):
+            print("Student already exists!")
+            return False
+        else:
+            # Add new student to the dictionary
+            students[student_registration_no] = {
+                "name": student_name,
+                "grade": student_grade
+            }
+            # updated dictionary
+            with open(data_file, 'w') as file:
+                json.dump(students, file, indent=4, sort_keys=True)
 
-        print(f"Student {student_name} added successfully.")
-        return True
+            print(f"Student {student_name} added successfully.")
+            return True
     
     except Exception as e:
         print("An error occured. Please try again")
@@ -107,8 +118,7 @@ def update_student():
 def delete_student():
     reg_no = input("Enter the reg no of the student you want to delete: ").upper()
     try:
-        with open(data_file, "r") as file:
-            students = json.load(file)
+        students = open_file()
         if reg_no not in students:
             print("Error! Registration number not found!")
             return
@@ -123,6 +133,9 @@ def delete_student():
 
 show_main_menu()
 
+# Cache students dictionary
+students_cache = open_file()
+
 # Main loop
 while True:
     user_option = get_user_input()
@@ -132,13 +145,17 @@ while True:
         continue
     
     if user_option == "1":
-        add_student()
+        # Update cache if student is added
+        if add_student():
+            students_cache = open_file()
     elif user_option == "2":
         view_all_students()
     elif user_option == "3":
         update_student()
+        students_cache = open_file()
     elif user_option == "4":
         delete_student()
+        students_cache = open_file()
     elif user_option == "5":
         print("Exiting program. Goodbye!")
         break
