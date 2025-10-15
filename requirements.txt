@@ -1,4 +1,8 @@
-# dev-requirements.txt
-black==24.8.0
-flake8==7.1.1
-
+flask
+flask_sqlalchemy
+flask_login
+flask_wtf
+python-dotenv
+flask_migrate
+psycopg2-binary
+werkzeug

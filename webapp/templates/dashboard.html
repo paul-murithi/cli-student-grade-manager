@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Your Dashboard</h2>
+<canvas id="gradeChart"></canvas>
+<script>
+  const ctx = document.getElementById('gradeChart');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Math', 'Science', 'English'],
+      datasets: [{
+        label: 'Grades',
+        data: [85, 90, 78]
+      }]
+    }
+  });
+</script>
+{% endblock %}
