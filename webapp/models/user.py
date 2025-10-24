@@ -1,11 +1,22 @@
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import backref
 
-# simple test table
 from webapp.models import db
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
+VALID_ROLES = ("student", "professor")
 
-    def __repr__(self):
-        return f'<User {self.username}>'
+class User(db.Model):
+    __tablename__ = 'user'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(50), unique=True, nullable=False)
+    role = db.Column(db.String(10), nullable=False)
+
+    courses = db.relationship('Course', back_populates='professor', cascade='all, delete')
+    enrollments = db.relationship('Enrollment', backref='user', lazy=True)
+
+    def set_role(self, role):
+        if role not in VALID_ROLES:
+            raise ValueError(f"Invalid role {role}")
+        self.role = role
