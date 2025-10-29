@@ -1,10 +1,12 @@
 from flask import Flask
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from .models import db, migrate
 import os
 
 login_manager = LoginManager()
+db = SQLAlchemy()
+migrate = Migrate()
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
@@ -24,6 +26,7 @@ def create_app():
     login_manager.login_view = 'auth.login'
 
     from .routes import auth, grades
+    from .models import models_file
 
     app.register_blueprint(auth.auth_bp)
     app.register_blueprint(grades.grades_bp)

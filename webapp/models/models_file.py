@@ -1,9 +1,4 @@
-from enum import unique
-
-from sqlalchemy import ForeignKey
-from sqlalchemy.orm import backref
-
-from webapp.models import db
+from webapp import db
 
 VALID_ROLES = ("student", "professor")
 
@@ -41,7 +36,7 @@ class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     code = db.Column(db.String(100), unique=True, nullable=False)
-    professor_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    professor_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     program_id = db.Column(db.Integer, db.ForeignKey('program.id'))
     semester = db.Column(db.Integer, nullable=False)
 
