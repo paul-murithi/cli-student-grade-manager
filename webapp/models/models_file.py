@@ -1,5 +1,5 @@
 from webapp import db
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 VALID_ROLES = ("student", "professor")
 
@@ -22,6 +22,9 @@ class User(db.Model):
     
     def set_password(self, plain_text_password):
         self.password_hash = generate_password_hash(plain_text_password)
+
+    def check_password(self, plain_text_password):
+        return check_password_hash(self.password_hash, plain_text_password)
 
 
 class Program(db.Model):

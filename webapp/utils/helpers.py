@@ -13,4 +13,4 @@ def validate_password(password):
 def validate_username(username):
     if not username or username.strip() == "":
         return False
-    return username.isalnum() and 3 <= len(username) <= 20
+    return 3 <= len(username) <= 20

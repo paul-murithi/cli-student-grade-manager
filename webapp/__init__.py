@@ -8,6 +8,11 @@ login_manager = LoginManager()
 db = SQLAlchemy()
 migrate = Migrate()
 
+@login_manager.user_loader
+def load_user(user_id):
+    from webapp.models.models_file import User
+    return User.query.get(int(user_id))
+
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
 

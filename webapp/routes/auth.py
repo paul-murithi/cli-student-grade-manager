@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash, jsonify
+from flask import Blueprint, render_template, redirect, url_for, request, flash, jsonify, current_app
+from flask_login import login_user, logout_user, login_required, current_user
 from webapp.models.models_file import User
 from webapp import db
 from webapp.utils.helpers import validate_email, validate_password, validate_username
@@ -52,3 +53,49 @@ def register():
         return redirect(url_for('auth.login'))
 
     return render_template('auth.html', action='register')
+
+@auth_bp.route('/login', methods=['POST', 'GET'])
+def login():
+    """
+    Renders the login page.
+    Context variables passed to the template:
+        - action: str, set to 'login' to indicate which tab to show.
+    """
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        if not password:
+            flash('Password cannot be empty', 'error')
+            return redirect(url_for('auth.login'))
+
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            current_app.logger.warning(f"Failed login attempt: Email not found - {email}")
+            flash('Email not found', 'error')
+            return redirect(url_for('auth.login'))
+
+        if not user.check_password(password):
+            current_app.logger.warning(f"Failed login attempt: Incorrect password for email {email}")
+            flash('Incorrect password', 'error')
+            return redirect(url_for('auth.login'))
+
+        login_user(user)
+        flash('Login successful', 'success')
+
+        # TODO: Redirect based on role
+        return redirect(url_for('auth.dashboard'))
+    return render_template('auth.html', action='login')
+
+@auth_bp.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('You have been logged out', 'success')
+    return redirect(url_for('auth.login'))
+
+# TODO: Implement real dashboard based on user role
+@auth_bp.route('/dashboard')
+@login_required
+def dashboard():
+    return render_template('dashboard.html')
