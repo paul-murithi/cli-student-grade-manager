@@ -83,8 +83,12 @@ def login():
         login_user(user)
         flash('Login successful', 'success')
 
-        # TODO: Redirect based on role
-        return redirect(url_for('auth.dashboard'))
+        if user.role == 'student':
+            return redirect(url_for('dashboard.student_dashboard'))
+        elif user.role == 'professor':
+            return redirect(url_for('dashboard.professor_dashboard'))
+        else:
+            return redirect(url_for('dashboard.student_dashboard'))
     return render_template('auth.html', action='login')
 
 @auth_bp.route('/logout')
@@ -93,9 +97,3 @@ def logout():
     logout_user()
     flash('You have been logged out', 'success')
     return redirect(url_for('auth.login'))
-
-# TODO: Implement real dashboard based on user role
-@auth_bp.route('/dashboard')
-@login_required
-def dashboard():
-    return render_template('dashboard.html')

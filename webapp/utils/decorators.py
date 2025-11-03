@@ -5,7 +5,8 @@ from flask import abort, current_app
 from flask_login import current_user
 from flask import render_template, request, redirect, url_for, flash
 
-def roles_required(*roles):
+
+def role_required(*roles):
     """
         Decorator to restrict access to users with specific roles.
     """
@@ -27,10 +28,15 @@ def roles_required(*roles):
 
             if not has_role:
                 current_app.logger.warning(
-                    f"Unauthorized access attempt by user {getattr(current_user, 'id', 'unknown')} with role {user_role} on endpoint {request.path}"
+                    f"Unauthorized access attempt by user {getattr(current_user, 'id', 'unknown')} with role {
+                        user_role} on endpoint {request.path}"
                 )
-                abort(403)
-
+                flash(
+                    'access denied. You do not have permission to view that page', 'warning')
+                if user_role == 'student':
+                    return redirect(url_for('dashboard.student_dashboard'))
+                elif user_role == 'professor':
+                    return redirect(url_for('dashboard.professor_dashboard'))
             return f(*args, **kwargs)
         return decorated_function
     return decorator

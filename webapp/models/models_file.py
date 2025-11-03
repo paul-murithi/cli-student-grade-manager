@@ -1,9 +1,11 @@
 from webapp import db
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
 
 VALID_ROLES = ("student", "professor")
 
-class User(db.Model):
+
+class User(UserMixin, db.Model):
     __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -12,14 +14,16 @@ class User(db.Model):
     password_hash = db.Column(db.String(128))
     role = db.Column(db.String(10), nullable=False)
 
-    courses = db.relationship('Course', back_populates='professor', cascade='all, delete')
-    enrollments = db.relationship('Enrollment', back_populates='student', cascade='all, delete')
+    courses = db.relationship(
+        'Course', back_populates='professor', cascade='all, delete')
+    enrollments = db.relationship(
+        'Enrollment', back_populates='student', cascade='all, delete')
 
     def set_role(self, role: str):
         if role not in VALID_ROLES:
             raise ValueError(f"Invalid role {role}")
         self.role = role
-    
+
     def set_password(self, plain_text_password):
         self.password_hash = generate_password_hash(plain_text_password)
 
@@ -34,7 +38,8 @@ class Program(db.Model):
     name = db.Column(db.String(100), nullable=False, unique=True)
     description = db.Column(db.Text)
 
-    courses = db.relationship('Course', back_populates='program', cascade='all, delete')
+    courses = db.relationship(
+        'Course', back_populates='program', cascade='all, delete')
 
 
 class Course(db.Model):
@@ -43,13 +48,15 @@ class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     code = db.Column(db.String(100), unique=True, nullable=False)
-    professor_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    professor_id = db.Column(
+        db.Integer, db.ForeignKey('user.id'), nullable=True)
     program_id = db.Column(db.Integer, db.ForeignKey('program.id'))
     semester = db.Column(db.Integer, nullable=False)
 
     professor = db.relationship('User', back_populates='courses')
     program = db.relationship('Program', back_populates='courses')
-    enrollments = db.relationship('Enrollment', back_populates='course', cascade='all, delete')
+    enrollments = db.relationship(
+        'Enrollment', back_populates='course', cascade='all, delete')
 
 
 class Enrollment(db.Model):
@@ -57,7 +64,8 @@ class Enrollment(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
+    course_id = db.Column(db.Integer, db.ForeignKey(
+        'course.id'), nullable=False)
     score = db.Column(db.Float)
     letter_grade = db.Column(db.String(2))
     date_enrolled = db.Column(db.DateTime)

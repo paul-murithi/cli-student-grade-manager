@@ -1,0 +1,16 @@
+{% extends 'base.html' %} {% block title %}Student Dashboard{% endblock %} {%
+block content %}
+<h1>Welcome to the Student Dashboard</h1>
+<p>Here you can view your courses, assignments, and grades.</p>
+<div clas>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+</div>
+{% endblock %}

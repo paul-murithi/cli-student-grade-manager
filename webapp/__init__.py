@@ -8,10 +8,12 @@ login_manager = LoginManager()
 db = SQLAlchemy()
 migrate = Migrate()
 
+
 @login_manager.user_loader
 def load_user(user_id):
     from webapp.models.models_file import User
     return User.query.get(int(user_id))
+
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
@@ -33,9 +35,12 @@ def create_app():
     login_manager.login_message_category = "warning"
 
     from .routes import auth, grades
+    from .routes import dashboard, course
     from .models import models_file
 
     app.register_blueprint(auth.auth_bp)
     app.register_blueprint(grades.grades_bp)
+    app.register_blueprint(dashboard.dashboard_bp)
+    app.register_blueprint(course.course_bp)
 
     return app
