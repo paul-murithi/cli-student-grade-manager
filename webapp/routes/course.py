@@ -8,19 +8,16 @@ from sqlalchemy.exc import IntegrityError
 
 course_bp = Blueprint('course', __name__, url_prefix='/course')
 
-
-@course_bp.route('/enroll', methods=['GET', 'POST'])
-@login_required
-@role_required('student')
-def enroll():
-    if request.method == 'POST':
-      ...
-    return render_template('course/enroll.html')
-
 @course_bp.route('/create', methods=['GET', 'POST'])
 @login_required
 @role_required('professor')
 def create_course():
+    """ Module to be used by user (role='professor') to create a new course
+    Keyword arguments:
+    argument -- description
+    Return: GET request returns the template page to add a new course
+            POST request returns the template page to view the created course
+    """
     programs = Program.query.all()
     form_data = {}
     if request.method == 'POST':
@@ -70,5 +67,32 @@ def delete(course_id):
 
 @course_bp.route('/view/<int:course_id>', methods=['GET'])
 @login_required
-def view(course_id):
-    return render_template('course/view_course.html', course_id=course_id)
+@role_required('professor')
+def view_course(course_id):
+    """
+    View a specific course by its ID.
+
+    Parameters:
+        course_id (int): The ID of the course to view.
+
+    Returns:
+        Rendered template for viewing the course details.
+    """
+    course = Course.query.filter_by(id=course_id).first()
+    if course is None:
+        return render_template('404.html'), 404
+    return render_template('course/view_course.html', course=course)
+
+@course_bp.route('/view')
+@login_required
+@role_required('professor')
+def view_all_courses():
+    """
+    View all courses.
+    Returns:
+        Rendered template for viewing all courses
+        Context:
+            courses (list): List of Course objects to be displayed in the template
+    """
+    courses = Course.query.all()
+    return render_template('course/view_all.html', courses=courses)

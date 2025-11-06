@@ -1,0 +1,59 @@
+{% extends 'base.html'%} {% block title %}Create new course{% endblock %} {%
+block content%}
+<style>
+  .form-container {
+    width: 80%;
+    margin: 5rem auto;
+  }
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+  }
+  .error-message {
+    color: red;
+  }
+</style>
+<div class="form-container">
+  <form
+    action="{{ url_for('course.create_course') }}"
+    method="post"
+    id="create_course-form"
+  >
+    <div class="form-field">
+      <label for="course_name">Enter course name</label>
+      <input type="text" name="name" id="course_name" required />
+    </div>
+    <div class="form-field">
+      <label for="semester">Enter the course semester</label>
+      <input
+        type="number"
+        name="semester"
+        id="semester"
+        min="1"
+        max="8"
+        required
+      />
+    </div>
+    <div class="form-field">
+      <label for="course_code">Enter the course code</label>
+      <input type="text" name="code" id="course_code" maxlength="7" required />
+    </div>
+    <div class="form-field">
+      <label for="programs">Select program</label>
+      <select name="program" id="programs" required>
+        {% if programs %} {% for program in programs %}
+        <option value="{{ program.name }}">{{ program.name }}</option>
+        {% endfor %} {% endif %}
+      </select>
+    </div>
+    <div class="error-container">
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <p class="error-message {{ category }}">{{ message }}</p>
+      {% endfor %} {% endif %} {% endwith %}
+    </div>
+    <button type="submit">Add course</button>
+  </form>
+</div>
+{% endblock %}
