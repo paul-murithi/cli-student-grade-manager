@@ -40,6 +40,11 @@ def clean_form_data(form_data: dict) -> dict:
     return cleaned_data
 
 def check_errors(cleaned_data: dict) -> list:
+    """
+    Checks for missing or invalid fields in the cleaned form data.
+    Returns a list of field names that are missing or invalid.
+    """
+    
     from flask import flash
     missing_fields = []
     if not cleaned_data.get('name'):

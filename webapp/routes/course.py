@@ -52,10 +52,44 @@ def create_course():
 @login_required
 @role_required('professor')
 def edit(course_id):
+    """
+    Edit a specific course by its ID (professors can only edit name and semester).
+    """
+    course = Course.query.get(course_id)
+    if not course:
+        return render_template('404.html'), 404
+
+    # only the professor who created the course can edit it
+    if course.professor_id != current_user.id:
+        flash('You do not have permission to edit this course.', 'error')
+        return redirect(url_for('course.view_course', course_id=course_id))
+
     if request.method == 'POST':
-        ...
-        # TODO: Add course editing logic
-    return render_template('course/edit_course.html', course_id=course_id)
+        cleaned_data = clean_form_data(request.form)
+        missing_fields = []
+
+        if not cleaned_data.get('name'):
+            missing_fields.append('Name')
+        if not cleaned_data.get('semester'):
+            missing_fields.append('Semester')
+
+        if missing_fields:
+            flash(f"Missing or invalid fields: {', '.join(missing_fields)}", "error")
+            return render_template('course/edit_course.html', course=course, form_data=cleaned_data), 400
+
+        course.name = cleaned_data.get('name')
+        course.semester = cleaned_data.get('semester')
+
+        try:
+            db.session.commit()
+            flash('Course updated successfully!', 'success')
+            return redirect(url_for('course.view_course', course_id=course_id))
+        except IntegrityError:
+            db.session.rollback()
+            flash('An error occurred while updating the course. Please try again.', 'error')
+            return render_template('course/edit_course.html', course=course, form_data=cleaned_data), 400
+
+    return render_template('course/edit_course.html', course=course)
 
 @course_bp.route('/delete/<int:course_id>', methods=['POST'])
 @login_required
