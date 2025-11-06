@@ -61,9 +61,27 @@ def edit(course_id):
 @login_required
 @role_required('professor')
 def delete(course_id):
-    ...
-    # TODO: Add course deletion logic
-    return '', 204
+    """
+    Delete a specific course by its ID.
+
+    Parameters:
+        course_id (int): The ID of the course to delete.
+
+    Returns:
+        Response: A redirect to the view_all_courses page after deletion.
+    """
+    course = Course.query.filter_by(id=course_id).first()
+    professor_id = current_user.id
+
+    if not course:
+        flash('Course not found.', 'error')
+    elif course.professor_id != professor_id:
+        flash('You do not have permission to delete this course.', 'error')
+    else:
+        db.session.delete(course)
+        db.session.commit()
+        flash('Course deleted successfully!', 'success')
+    return redirect(url_for('course.view_all_courses'))
 
 @course_bp.route('/view/<int:course_id>', methods=['GET'])
 @login_required
