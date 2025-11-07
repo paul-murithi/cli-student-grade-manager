@@ -89,7 +89,10 @@ def edit(course_id):
             flash('An error occurred while updating the course. Please try again.', 'error')
             return render_template('course/edit_course.html', course=course, form_data=cleaned_data), 400
 
-    return render_template('course/edit_course.html', course=course)
+    return render_template('course/edit_course.html', course=course, form_data={
+        'name': course.name,
+        'semester': course.semester
+    })
 
 @course_bp.route('/delete/<int:course_id>', methods=['POST'])
 @login_required
