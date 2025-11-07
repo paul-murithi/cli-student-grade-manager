@@ -1,5 +1,12 @@
 {% extends 'base.html' %} {% block title %}Professor Dashboard{% endblock %} {%
-block content %}
-<h1>Welcome to the Professor Dashboard</h1>
-<p>Here you can manage your courses, view student submissions, and more.</p>
+block extra_css %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/dashboard/professor_dash.css') }}"
+/>
+{% endblock %} {% block content %}
+<div class="dashboard-section">
+  <h1>Welcome, Professor {{ current_user.username }}!</h1>
+  <p>This is your dashboard where you can manage your courses and students.</p>
+</div>
 {% endblock %}
