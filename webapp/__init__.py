@@ -35,13 +35,14 @@ def create_app():
     login_manager.login_message_category = "warning"
 
     from .routes import auth, grades
-    from .routes import dashboard, course
+    from .routes import dashboard, course, enrollments
     from .models import models_file
 
     app.register_blueprint(auth.auth_bp)
     app.register_blueprint(grades.grades_bp)
     app.register_blueprint(dashboard.dashboard_bp)
     app.register_blueprint(course.course_bp)
+    app.register_blueprint(enrollments.enrollment_bp)
 
     from webapp.error_handler import register_error_handlers
     register_error_handlers(app)
