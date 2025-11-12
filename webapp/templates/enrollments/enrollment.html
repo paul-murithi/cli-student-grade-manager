@@ -4,41 +4,4 @@ extra_css %}
   rel="stylesheet"
   href="{{ url_for('static', filename='css/enrollment/enrollment.css') }}"
 />
-{% endblock %} {% block content %}
-<div>
-  <h1>Welcome.</h1>
-  <p>Viewing all enrollments</p>
-</div>
-<div>
-  {% if enrollments %}
-  <table border="1" cellpadding="8">
-    <thead>
-      <tr>
-        <th>Student</th>
-        <th>Course</th>
-        <th>Score</th>
-        <th>Letter Grade</th>
-        <th>Date Enrolled</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for enrollment in enrollments %}
-      <tr>
-        <td>{{ enrollment.student.name }}</td>
-        <td>{{ enrollment.course.name }}</td>
-        <td>{{ enrollment.score or 'N/A' }}</td>
-        <td>{{ enrollment.letter_grade or 'N/A' }}</td>
-        <td>
-          {{ enrollment.date_enrolled.strftime('%Y-%m-%d') if
-          enrollment.date_enrolled else 'N/A' }}
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% else %}
-  <p>No enrollments found.</p>
-  {% endif %}
-</div>
-
-{% endblock %}
+{% endblock %} {% block content %} {% endblock %}

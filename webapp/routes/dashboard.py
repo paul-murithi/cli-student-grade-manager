@@ -49,4 +49,14 @@ def student_dashboard():
 @login_required
 @role_required('professor')
 def professor_dashboard():
-    return render_template('dashboard/professor.html')
+    """
+    Handles professor view on the dashboard
+        1. Allows view to all students enrolled in user's courses
+        2. 
+    Return: enrollments page
+    """
+    user_id = current_user.id
+    courses = Course.query.filter_by(professor_id=user_id).all()
+    enrollments = Enrollment.query.filter(Enrollment.course_id.in_([c.id for c in courses])).all()
+
+    return render_template('dashboard/professor.html', enrollments=enrollments)
