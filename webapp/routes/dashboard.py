@@ -16,6 +16,7 @@ def student_dashboard():
     and other available courses they can join
     """
     try:
+        print("Started to run....")
         # All enrolled courses
         enrolled_courses = (
             Course.query
@@ -23,6 +24,8 @@ def student_dashboard():
             .filter(Enrollment.user_id == current_user.id)
             .all()
         )
+
+        print(enrolled_courses)
 
         enrolled_ids = {course.id for course in enrolled_courses}
 

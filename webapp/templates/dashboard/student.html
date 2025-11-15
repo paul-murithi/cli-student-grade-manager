@@ -1,27 +1,127 @@
-{% extends 'base.html' %} {% block title %}Student Dashboard{% endblock %} {%
-block content %}
-<div class="header">
-  <h1>Welcome to the Student Dashboard</h1>
-  <p>Here you can view your courses, assignments, and grades.</p>
+{% extends "base.html" %} {% block title %}Student Dashboard{% endblock %} {%
+block extra_css %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/dashboard/student_dash.css') }}"
+/>
+{% endblock %} {% block content %}
+<div class="dashboard-container">
+  <!-- Header -->
+  <header class="dashboard-header">
+    <h1>Welcome, {{ current_user.name }}!</h1>
+    <p>Here’s what you’re enrolled in — and what’s waiting for you.</p>
+  </header>
+
+  <!-- Enrolled Courses -->
+  <section class="courses-section">
+    <h2 class="section-title">Your Enrolled Courses</h2>
+
+    {% if enrolled_courses %}
+    <div class="course-grid">
+      {% for course in enrolled_courses %}
+      <div class="course-card enrolled">
+        <div class="course-content">
+          <h3 class="course-title">{{ course.name }}</h3>
+          <!--TODO: Add description-->
+          <a
+            href="{{ url_for('course.view_course', course_id=course.id) }}"
+            class="btn primary"
+            >Go to Course</a
+          >
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">You’re not enrolled in any courses yet.</div>
+    {% endif %}
+  </section>
+
+  <hr class="divider" />
+
+  <!-- Available Courses -->
+  <section class="courses-section">
+    <h2 class="section-title">Explore More Courses</h2>
+
+    {% if courses %}
+    <div class="course-grid">
+      {% for course in courses %}
+      <div class="course-card">
+        <div class="course-content">
+          <h3 class="course-title">{{ course.name }}</h3>
+          <!--TODO: Add Description-->
+          <button class="btn success" data-course-id="{{ course.id }}">
+            Join Course
+          </button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">No new courses available right now.</div>
+    {% endif %}
+  </section>
+  <dialog id="modal" class="modal">
+    <div class="modal-content">
+      <h2>This will enroll you to this course</h2>
+
+      <div class="button-row">
+        <button class="action-btn delete close-modal">Cancel</button>
+        <button class="action-btn view enroll-btn close-modal join-btn">
+          Continue and enroll
+        </button>
+      </div>
+    </div>
+  </dialog>
 </div>
 
-<table>
-  {% if courses %}
-  <th>Other courses you could try:</th>
-  {% for course in courses %}
-  <tr>
-    Title
-    <td>{{ course }}</td>
-  </tr>
-  {% endfor %} {% endif %}
-</table>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById("modal");
+    const courseButtons = document.querySelectorAll("[data-course-id]");
+    const modalButtons = document.querySelectorAll(".close-modal");
 
-<div>
-  {% if enrolled_courses %}
-  <p style="font-weight: bold">Courses you have enrolled for:</p>
-  {% for course in enrolled_courses %}
-  <p>{{ course }}</p>
-  {% endfor %} {% endif %}
-</div>
+    let selectedCourseId = null;
 
+    courseButtons.forEach((button) =>
+      button.addEventListener("click", () => {
+        selectedCourseId = button.dataset.courseId;
+        modal.showModal();
+      })
+    );
+
+    document.querySelector(".join-btn").addEventListener("click", () => {
+      if (selectedCourseId) {
+        joinCourse(selectedCourseId);
+      }
+    });
+
+    modalButtons.forEach((btn) => btn.addEventListener("click", closeModal));
+
+    function closeModal() {
+      selectedCourseId = null;
+      modal.close();
+    }
+
+    async function joinCourse(courseId) {
+      try {
+        const response = await fetch(`/enrollment/new`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            course_id: courseId,
+          }),
+        });
+
+        if (response.ok) {
+          location.reload();
+        } else {
+          console.log("Failed to join the course.");
+        }
+      } catch (err) {
+        console.log(`An error occured: ${err}`);
+      }
+    }
+  });
+</script>
 {% endblock %}
