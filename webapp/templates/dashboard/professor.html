@@ -37,8 +37,67 @@ block extra_css %}
       {% endfor %}
     </tbody>
   </table>
+  <div class="grades">
+    {% for enrollment in enrollments %} {% if enrollment.score is none %}
+    <p>
+      {{ enrollment.student.name }} has not been graded yet for {{
+      enrollment.course.name }}.
+    </p>
+    <button id="grade-student">Grade Student</button>
+    <!--Grade student modal-->
+    <dialog id="modal" class="modal">
+      <div class="modal-content">
+        <h2>This will grade {{ enrollment.student.name }}</h2>
+        <div>
+          <form action="#" class="active">
+            <label for="score">
+              Enter the score
+              <input type="number" name="score" id="score" />
+            </label>
+            <label for="letter-grade">
+              Enter the letter grade
+              <input type="text" name="letter-grade" id="letter-grade" />
+            </label>
+            <div class="button-row">
+              <button class="action-btn delete close-modal" type="button">
+                Cancel
+              </button>
+              <button class="action-btn view close-modal" type="submit">
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </dialog>
+    {% endif %} {% endfor %}
+  </div>
   {% else %}
   <p>No enrollments found.</p>
   {% endif %}
 </section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const gradeButton = document
+      .getElementById("grade-student")
+      .addEventListener("click", openActionMenu);
+    const modal = document.getElementById("modal");
+    const closeModalBtn = document
+      .querySelectorAll(".close-modal")
+      .forEach((btn) =>
+        btn.addEventListener("click", () => {
+          console.log("clicked to close");
+
+          modal.close();
+        })
+      );
+
+    function openActionMenu() {
+      modal.showModal();
+    }
+
+    function addGrade() {}
+  });
+</script>
 {% endblock %}
