@@ -57,3 +57,21 @@ def check_errors(cleaned_data: dict) -> list:
         missing_fields.append('Semester')
     return missing_fields
         
+def get_letter_grade(score: float) -> str:
+    """
+    Module to calculate the student's grade based on the score
+    Keyword arguments:
+    score -- The score as a number
+    Return: The letter grade as a string
+    """
+    if score >= 70:
+        return 'A'
+    elif score >= 60:
+        return 'B'
+    elif score >= 50:
+        return 'C'
+    elif score >= 40:
+        return 'D'
+    else:
+        return 'E'
+    
