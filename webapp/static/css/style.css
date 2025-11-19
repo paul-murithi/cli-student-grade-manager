@@ -108,6 +108,12 @@ input {
   color: var(--primary);
 }
 
+nav a.active {
+  border-bottom: 2px solid var(--primary);
+  font-weight: bold;
+  color: var(--primary);
+}
+
 .menu-toggle {
   display: none;
 }
