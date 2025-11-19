@@ -1,0 +1,80 @@
+.container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.header p {
+  font-size: 1.1rem;
+  color: #555;
+}
+
+.enrollment-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  transition: transform 0.2s ease;
+}
+
+.enrollment-card:hover {
+  transform: translateY(-3px);
+}
+
+.course-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.course-table th,
+.course-table td {
+  padding: 0.8rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.grade-badge {
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.grade-A {
+  background-color: #28a745;
+}
+.grade-B {
+  background-color: #17a2b8;
+}
+.grade-C {
+  background-color: #ffc107;
+  color: #212529;
+}
+.grade-D {
+  background-color: #fd7e14;
+}
+.grade-F {
+  background-color: #dc3545;
+}
+
+@media (max-width: 600px) {
+  .header h1 {
+    font-size: 1.5rem;
+  }
+  .course-table th,
+  .course-table td {
+    padding: 0.5rem;
+  }
+}

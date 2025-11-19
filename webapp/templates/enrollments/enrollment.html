@@ -1,7 +1,41 @@
-{% extends 'base.html' %} {% block title %} Enrollments {% endblock %} {% block
+{% extends 'base.html' %} {% block title %}Enrollments{% endblock %} {% block
 extra_css %}
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='css/enrollment/enrollment.css') }}"
 />
-{% endblock %} {% block content %} {% endblock %}
+<style></style>
+{% endblock %} {% block content %}
+<div class="container">
+  {% if enrollments %}
+  <div class="header">
+    <h1>Welcome {{ enrollments[0].student.name }}</h1>
+    <p>Here are your course results:</p>
+  </div>
+
+  {% for enrollment in enrollments %}
+  <div class="enrollment-card">
+    <h2>{{ enrollment.course.name }}</h2>
+    <table class="course-table">
+      <tr>
+        <th>Score</th>
+        <td>{{ enrollment.score }}</td>
+      </tr>
+      <tr>
+        <th>Grade</th>
+        <td>
+          <span class="grade-badge grade-{{ enrollment.letter_grade }}">
+            {{ enrollment.letter_grade }}
+          </span>
+        </td>
+      </tr>
+    </table>
+  </div>
+  {% endfor %} {% else %}
+  <div class="header">
+    <h2>No enrollments found</h2>
+    <p>Please check back later.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
