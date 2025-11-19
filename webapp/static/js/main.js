@@ -1,9 +1,16 @@
-document.getElementById("menuToggle")?.addEventListener("click", () => {
-  document.querySelector(".nav-right")?.classList.toggle("open");
-});
+document.addEventListener("DOMContentLoaded", () => {
+  const countdown = document.getElementById("counter");
 
-// Remove flash messages after 5 seconds
-setTimeout(() => {
-  const flashMessages = document.querySelectorAll(".flash-message");
-  flashMessages.forEach((msg) => msg.remove());
-}, 5000);
+  document.getElementById("menuToggle")?.addEventListener("click", () => {
+    document.querySelector(".nav-right")?.classList.toggle("open");
+  });
+
+  setTimeout(() => {
+    const flashMessages = document.querySelectorAll(".flash-message");
+    flashMessages.forEach((msg) => msg.classList.add("inactive"));
+  }, 5000);
+
+  setTimeout(() => {
+    countdown.classList.add("shrink");
+  }, 250);
+});

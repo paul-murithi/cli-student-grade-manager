@@ -118,7 +118,6 @@ input {
   top: 1rem;
   right: 1rem;
   display: flex;
-  flex-direction: column;
   gap: 0.5rem;
   z-index: 1100;
   max-width: 360px;
@@ -127,6 +126,25 @@ input {
 
 .flash-container .flash-message {
   pointer-events: auto;
+  position: relative;
+}
+
+.flash-message.inactive {
+  display: none;
+}
+
+.flash-container .flash-message .counter {
+  position: absolute;
+  height: 0.25rem;
+  background-color: teal;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  transition: width 4.5s linear;
+}
+
+.flash-message .counter.shrink {
+  width: 0;
 }
 
 @media (max-width: 420px) {

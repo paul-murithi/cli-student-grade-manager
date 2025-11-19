@@ -22,10 +22,12 @@
         {% if current_user.is_authenticated %} {% if current_user.role ==
         'student' %}
         <a href="#">My Profile</a>
-        <a href="#">My Courses</a>
-        <a href="#">Grades</a>
+        <a href="{{ url_for('grades.view_grades') }}">Grades</a>
+        <a href="{{ url_for('dashboard.student_dashboard') }}">My Dashboard</a>
         {% elif current_user.role == 'professor' %}
-        <a href="#">Dashboard</a>
+        <a href="{{ url_for('dashboard.professor_dashboard') }}"
+          >My Dashboard</a
+        >
         <a href="{{ url_for('course.view_all_courses') }}">My Courses</a>
         {% endif %}
         <a href="{{ url_for('auth.logout') }}" class="logout-btn">Logout</a>
@@ -41,7 +43,10 @@
     <div class="flash-container">
       {% with messages = get_flashed_messages(with_categories=true) %} {% if
       messages %} {% for category, message in messages %}
-      <div class="flash-message {{ category }}">{{ message }}</div>
+      <div class="flash-message {{ category }}">
+        <span>{{ message }}</span>
+        <div class="counter" id="counter"></div>
+      </div>
       {% endfor %} {% endif %} {% endwith %}
     </div>
 

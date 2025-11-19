@@ -1,0 +1,155 @@
+.dashboard-section {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.dashboard-section h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.dashboard-section p {
+  font-size: 1.1rem;
+  color: #555;
+}
+
+section h2 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  color: #333;
+  text-align: center;
+}
+
+.enrollment-table-container {
+  overflow-x: auto;
+  margin-bottom: 2rem;
+}
+
+table.enrollment-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: auto;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+table.enrollment-table th,
+table.enrollment-table td {
+  padding: 0.8rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+table.enrollment-table th {
+  background-color: #f4f4f4;
+  font-weight: 600;
+}
+
+table.enrollment-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+.grades {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.grade-btn {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 0.8rem;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 0.3rem;
+  transition: background-color 0.2s ease;
+}
+
+.grade-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Modal */
+dialog.modal {
+  width: 90%;
+  max-width: 400px;
+  border: none;
+  border-radius: 10px;
+  padding: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content {
+  padding: 2rem;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.modal-content form label {
+  display: block;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.modal-content form input[type="text"],
+.modal-content form input[type="number"] {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.3rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.button-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.action-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.action-btn.view {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.action-btn.view:hover {
+  background-color: #218838;
+}
+
+.action-btn.delete {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.action-btn.delete:hover {
+  background-color: #c82333;
+}
+
+@media (max-width: 600px) {
+  .modal-content {
+    padding: 1rem;
+  }
+  table.enrollment-table th,
+  table.enrollment-table td {
+    padding: 0.5rem;
+  }
+  .dashboard-section h1 {
+    font-size: 1.5rem;
+  }
+}

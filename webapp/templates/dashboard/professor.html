@@ -7,95 +7,102 @@ block extra_css %}
 {% endblock %} {% block content %}
 <div class="dashboard-section">
   <h1>Welcome, Professor {{ current_user.name }}!</h1>
-  <p>This is your dashboard where you can manage your courses and students.</p>
+  <p>Manage your courses and student enrollments efficiently.</p>
 </div>
+
 <section>
-  <h2>Enrollments to your course</h2>
+  <h2>Enrollments in Your Courses</h2>
+
   {% if enrollments %}
-  <table border="1" cellpadding="8">
-    <thead>
-      <tr>
-        <th>Student</th>
-        <th>Course</th>
-        <th>Score</th>
-        <th>Letter Grade</th>
-        <th>Date Enrolled</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for enrollment in enrollments %}
-      <tr>
-        <td>{{ enrollment.student.name }}</td>
-        <td>{{ enrollment.course.name }}</td>
-        <td>{{ enrollment.score or 'N/A' }}</td>
-        <td>{{ enrollment.letter_grade or 'N/A' }}</td>
-        <td>
-          {{ enrollment.date_enrolled.strftime('%Y-%m-%d') if
-          enrollment.date_enrolled else 'N/A' }}
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <div class="enrollment-table-container">
+    <table class="enrollment-table">
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Course</th>
+          <th>Score</th>
+          <th>Letter Grade</th>
+          <th>Date Enrolled</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for enrollment in enrollments %}
+        <tr>
+          <td>{{ enrollment.student.name }}</td>
+          <td>{{ enrollment.course.name }}</td>
+          <td>{{ enrollment.score or 'N/A' }}</td>
+          <td>{{ enrollment.letter_grade or 'N/A' }}</td>
+          <td>
+            {{ enrollment.date_enrolled.strftime('%Y-%m-%d') if
+            enrollment.date_enrolled else 'N/A' }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
   <div class="grades">
-    <div>
-      {% set ungraded = enrollments|selectattr('score','equalto',None)|list %}
-      {% if ungraded %} {% for enrollment in ungraded %}
-      <p>
+    {% set ungraded = enrollments|selectattr('score','equalto',None)|list %} {%
+    if ungraded %} {% for enrollment in ungraded %}
+    <h2>Ungraded students</h2>
+    <ol>
+      <li>
         {{ enrollment.student.name }} has not been graded yet for {{
         enrollment.course.name }}.
-      </p>
-      <button
-        class="grade-btn"
-        data-student-id="{{ enrollment.student.id }}"
-        data-course-id="{{ enrollment.course.id }}"
-        data-course-name="{{ enrollment.course.name }}"
-        data-student-name="{{ enrollment.student.name }}"
-      >
-        Grade Student
-      </button>
-      {% endfor %} {% else %}
-      <div>All students are already graded</div>
-      {% endif %}
-    </div>
-    <!--Grade student modal-->
-    <dialog id="modal" class="modal">
-      <div class="modal-content">
-        <h2 id="modal-title"></h2>
-        <form
-          action="{{ url_for('grades.grade_student') }}"
-          method="post"
-          class="active"
-        >
-          <label for="course">
-            Course
-            <input type="text" name="course" id="course" readonly />
-          </label>
-          <label for="score">
-            Enter the score
-            <input
-              type="number"
-              name="score"
-              id="score"
-              required
-              min="1"
-              max="100"
-            />
-          </label>
-          <input type="hidden" name="student_id" id="student-id" />
-          <input type="hidden" name="course_id" id="course-id" />
-          <div class="button-row">
-            <button class="action-btn delete" type="button" id="close-modal">
-              Cancel
-            </button>
-            <button class="action-btn view" id="send-data">Submit</button>
-          </div>
-        </form>
-      </div>
-    </dialog>
+      </li>
+    </ol>
+    <button
+      class="grade-btn"
+      data-student-id="{{ enrollment.student.id }}"
+      data-course-id="{{ enrollment.course.id }}"
+      data-course-name="{{ enrollment.course.name }}"
+      data-student-name="{{ enrollment.student.name }}"
+    >
+      Grade Student
+    </button>
+    {% endfor %} {% else %}
+    <div>All students are already graded.</div>
+    {% endif %}
   </div>
+
+  <!-- Grade student modal -->
+  <dialog id="modal" class="modal">
+    <div class="modal-content">
+      <h2 id="modal-title"></h2>
+      <form
+        action="{{ url_for('grades.grade_student') }}"
+        method="post"
+        class="active"
+      >
+        <label for="course">
+          Course
+          <input type="text" name="course" id="course" readonly />
+        </label>
+        <label for="score">
+          Enter the score
+          <input
+            type="number"
+            name="score"
+            id="score"
+            required
+            min="1"
+            max="100"
+          />
+        </label>
+        <input type="hidden" name="student_id" id="student-id" />
+        <input type="hidden" name="course_id" id="course-id" />
+        <div class="button-row">
+          <button class="action-btn delete" type="button" id="close-modal">
+            Cancel
+          </button>
+          <button class="action-btn view" id="send-data">Submit</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
   {% else %}
-  <p>No enrollments found.</p>
+  <p style="text-align: center; margin-top: 1rem">No enrollments found.</p>
   {% endif %}
 </section>
 {% endblock %} {% block extra_js %}
