@@ -27,7 +27,7 @@ def grade_student():
         score = float(cleaned_score)
         letter_grade = get_letter_grade(score)
 
-    enrollment = Enrollment.query.filter(
+    enrollment = db.session.query(Enrollment).filter(
         Enrollment.user_id == student_id,
         Enrollment.course_id == course_id
     ).first()
@@ -62,7 +62,7 @@ def grade_student():
 @login_required
 @role_required('student')
 def view_grades():
-    enrollments = Enrollment.query.filter_by(user_id=current_user.id).all()
+    enrollments = db.session.query(Enrollment).filter_by(user_id=current_user.id).all()
     enrollments_list = list(enrollments) if enrollments else []
     if not enrollments_list:
         flash('No enrollments were found for this user', 'error')
